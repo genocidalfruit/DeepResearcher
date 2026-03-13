@@ -9,7 +9,7 @@ from langchain.agents import create_agent
 # Import the @tool-decorated functions
 from tools.web_search import (
     wikipedia_search,
-    tavily_search,       # primary web search (DDG fallback built-in)
+    tavily_search,
     scrape_url,
     comprehensive_search,
     semantic_scholar_search,
@@ -17,7 +17,7 @@ from tools.web_search import (
 )
 from tools.researchpaper_search import arxiv_search
 
-# ── Structured response schemas ──────────────────────────────────────────────
+# Structured response schemas
 
 class FinalReport(BaseModel):
     title: str = Field(description="A concise, descriptive title for the research report.")
@@ -31,7 +31,7 @@ class CritiqueOutput(BaseModel):
     is_valid: bool = Field(description="True if the draft answers the task and is factually aligned.")
     feedback: str = Field(description="Critique on what needs to be added, fixed, or removed.")
 
-# ── Shared state ────────────────────────────────────────────────────────────
+# Shared state
 
 class ResearchState(TypedDict):
     task: str
@@ -45,7 +45,7 @@ class ResearchState(TypedDict):
     is_valid: bool
     revision_count: int
 
-# ── LLM factory ─────────────────────────────────────────────────────────────
+# LLM factory
 
 def get_llm() -> ChatGoogleGenerativeAI:
     return ChatGoogleGenerativeAI(
@@ -53,7 +53,7 @@ def get_llm() -> ChatGoogleGenerativeAI:
         temperature=0,
     )
 
-# ── Manager agent ────────────────────────────────────────────────────────────
+# Manager agent
 
 def manager_agent(state: ResearchState) -> dict:
     print("\n[Manager Agent] Planning searches...")
@@ -75,7 +75,7 @@ def manager_agent(state: ResearchState) -> dict:
 
     return {"search_queries": queries, "revision_count": 0, "sources": []}
 
-# ── Search agent ─────────────────────────────────────────────────────────────
+# Search agent
 
 SEARCH_SYSTEM_PROMPT = """You are a Search Agent — a precise, efficient research specialist.
 
@@ -162,7 +162,7 @@ def search_agent(state: ResearchState) -> dict:
         "sources": list(set(collected_sources))
     }
 
-# ── Writer agent ──────────────────────────────────────────────────────────────
+# Writer agent
 
 WRITER_SYSTEM_PROMPT = """You are a Writer Agent — a skilled research analyst who synthesizes raw data into clear, authoritative reports.
 
@@ -234,7 +234,7 @@ def writer_agent(state: ResearchState) -> dict:
         "revision_count": revision + 1
     }
 
-# ── Critique agent ────────────────────────────────────────────────────────────
+# Critique agent
 
 CRITIQUE_SYSTEM_PROMPT = """You are an exceptionally rigorous Critique Agent tasked with quality-controlling research reports.
 Your job is to be a ruthless, thorough peer reviewer. You must flag every issue you find — no matter how minor.
@@ -288,7 +288,7 @@ Evaluate the draft report against the following checklist. Be harsh and specific
 """
 
 def critique_agent(state: ResearchState) -> dict:
-    print("\n[Critique Agent] Reviewing draft (rigorous mode)...")
+    print("\n[Critique Agent] Reviewing draft...")
     llm = get_llm()
 
     agent = create_agent(
@@ -309,7 +309,7 @@ def critique_agent(state: ResearchState) -> dict:
     result = agent.invoke({"messages": [HumanMessage(content=user_content)]})
     critique: CritiqueOutput = result["structured_response"]
 
-    status = "✅ VALID" if critique.is_valid else "❌ INVALID"
+    status = "VALID" if critique.is_valid else "INVALID"
     print(f"\n[Critique Agent] Verdict: {status}")
     print(f"\n[Critique Agent] Feedback:\n{critique.feedback}")
 

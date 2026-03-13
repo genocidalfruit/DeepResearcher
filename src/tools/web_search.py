@@ -9,7 +9,7 @@ from langchain_community.tools.semanticscholar.tool import SemanticScholarQueryR
 from langchain_community.retrievers import PubMedRetriever
 from langchain.tools import tool
 
-# ── Lazy singletons ───────────────────────────────────────────────────────────
+# Lazy singletons
 # Instantiated on first use, not at import time, so load_dotenv() in main.py
 # runs first and all API keys are available.
 
@@ -39,7 +39,7 @@ def _get_semantic_scholar():
 def _get_pubmed():
     return PubMedRetriever(load_max_docs=3)
 
-# ── Tools ─────────────────────────────────────────────────────────────────────
+# Tools
 
 @tool("wikipedia_search")
 def wikipedia_search(query: str) -> str:
@@ -88,7 +88,7 @@ def tavily_search(query: str) -> str:
         return "\n\n".join(lines)
 
     except Exception as tavily_err:
-        # ── DDG fallback ──────────────────────────────────────────────────────
+        # DDG fallback
         print(f"  [tavily_search] Tavily failed ({tavily_err}), falling back to DuckDuckGo...")
         try:
             ddg_results: list = _get_ddg().invoke(query)

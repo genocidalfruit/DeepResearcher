@@ -30,7 +30,7 @@ def main():
     try:
         app = build_graph()
         
-        # ── Initial State ───────────────────────────────────────────
+        # Initial State
         initial_state = {
             "task": query,
             "search_queries": [],

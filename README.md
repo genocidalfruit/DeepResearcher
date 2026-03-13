@@ -49,7 +49,6 @@ DeepResearcher utilizes a distributed architecture of specialized agents, each f
 
    ```bash
    GEMINI_API_KEY=your_google_gemini_api_key
-   # OR GOOGLE_API_KEY=your_google_api_key
    TAVILY_API_KEY=your_tavily_api_key
    ```
 
@@ -72,7 +71,7 @@ Starting Deep Researcher Team for query: 'What are the latest advancements in so
 [Manager Agent] Planning searches...
 [Search Agent] Executing searches...
 [Writer Agent] Drafting report (attempt 1)...
-[Critique Agent] Reviewing draft (rigorous mode)...
+[Critique Agent] Reviewing draft...
 
 ==================================================
 FINAL RESEARCH REPORT
@@ -95,11 +94,3 @@ DeepResearcher/
         ├── researchpaper_search.py  # Specialised arXiv retrieval tool
         └── web_search.py            # General web, Wikipedia, PubMed, and Semantic Scholar tools
 ```
-
-## 🤝 Contributing
-
-Contributions are welcome! If you'd like to extend the research capabilities with new APIs or refine the prompt strategies for better synthesis, please open an issue or submit a Pull Request.
-
-## 📄 License
-
-[MIT License](LICENSE) (or other applicable license).
